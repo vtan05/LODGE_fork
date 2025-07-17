@@ -1,0 +1,26 @@
+FOLDER: /host_data/van/Dance_v2/LODGE/exp/finedance # Experiment files saving path
+
+TEST:
+  FOLDER: /host_data/van/Dance_v2/LODGE/exp/finedance # Testing files saving path
+
+DATASET:
+  SMPL_PATH: '/data2/lrh/smpl_model/smpl'
+  SMPLH_PATH: '/data2/lrh/smpl_model/smplh'
+  SMPLX_PATH: '/data2/lrh/smpl_model/smplx'
+  AISTPP:
+    ROOT: /data2/lrh/dataset/aist/data/origin/30fps/fullset
+    MOTION: /data2/lrh/dataset/aist/data/origin/30fps/fullset/dances139_60fps
+    MUSIC: /data2/lrh/dataset/aist/data/origin/30fps/fullset/musics35_30fps
+    normalizer: /data2/lrh/project/dance/Lodge/lodge302/data/AIST_Normalizer.pth
+  AISTPP_60FPS:
+    MOTION: /data2/lrh/dataset/aist/data/origin/30fps/fullset/dances139_60fps
+    MUSIC: /data2/lrh/dataset/aist/data/origin/60fps/fullset/musics35_60fps
+  FINEDANCE_139CUT:
+    ROOT: /host_data/van/Dance_v2/LODGE/data/finedance
+    MOTION: /host_data/van/Dance_v2/LODGE/data/finedance/mofea319
+    MUSIC: /host_data/van/Dance_v2/LODGE/data/finedance/music_npy_new
+    normalizer: /host_data/van/Dance_v2/LODGE/data/finedance/Normalizer.pth
+    LABEL: /host_data/van/Dance_v2/LODGE/data/finedance/label_json
+    # LABEL: /data2/lrh/dataset/fine_dance/origin/label_json/
+  
+
