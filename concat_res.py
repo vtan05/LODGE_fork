@@ -7,7 +7,7 @@ from omegaconf import OmegaConf
 import sys, glob
 from pathlib import Path
 
-from pytorch3d.transforms import (axis_angle_to_matrix, matrix_to_axis_angle,
+from pytorch3d.transforms.rotation_conversions import (axis_angle_to_matrix, matrix_to_axis_angle,
                                   matrix_to_quaternion, matrix_to_rotation_6d,
                                   quaternion_to_matrix, rotation_6d_to_matrix)
 import torch
@@ -103,7 +103,7 @@ def concat_res(modir):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--gpu", type=str, default="0")
-    parser.add_argument("--modir", type=str, default='/data2/lrh/project/dance/Lodge/lodge302/experiments/Local_Module/FineDance_relative_Norm_GenreDis_bc190/samples_dod_inpaint_soft_ddim_2024-03-08-02-47-33') 
+    parser.add_argument("--modir", type=str, default='/host_data/van/Dance_v2/LODGE/results') 
     
     args = parser.parse_args()
     args = OmegaConf.create(vars(args))

@@ -5,9 +5,11 @@ import torch
 import cv2
 import os
 
-os.environ["PYOPENGL_PLATFORM"] = "osmesa" 
+os.environ["PYOPENGL_PLATFORM"] = "egl"
+os.environ["EGL_DEVICE_ID"] = "0"    
 from tqdm import tqdm
 from smplx import SMPL, SMPLX, SMPLH
+import gc
 import pyrender
 import trimesh
 import subprocess
@@ -64,10 +66,10 @@ class MovieMaker():
         self.img_size = (1200,1200)
 
     
-        SMPLH_path = "/data/human/datasets/smpl_model/smplh/SMPLH_MALE.pkl"
-        SMPL_path = "/data/human/datasets/smpl_model/smpl/SMPL_MALE.pkl"
-        SMPLX_path = "/data/human/datasets/smpl_model/smplx/SMPLX_NEUTRAL.npz"
-        trimesh_path = '/data2/lrh/floor/NORMAL_new.obj'
+        # SMPLH_path = "/data/human/datasets/smpl_model/smplh/SMPLH_MALE.pkl"
+        # SMPL_path = "/data/human/datasets/smpl_model/smpl/SMPL_MALE.pkl"
+        SMPLX_path = "/host_data/van/Dance_v2/LODGE/data/finedance/SMPLX_NEUTRAL.npz"
+        trimesh_path = '/host_data/van/Dance_v2/LODGE/data/finedance/NORMAL_new.obj'
 
         if args.mode == 'smplh':
             self.smplh = SMPLH(SMPLH_path, use_pca=False, flat_hand_mean=True)
@@ -173,6 +175,7 @@ class MovieMaker():
                 # subprocess.run(['/home/lrh/Documents/ffmpeg-6.0-amd64-static/ffmpeg','-i',movie_file,output_file])
                 subprocess.run(['ffmpeg','-i',movie_file,output_file])
                 os.remove(movie_file)
+            self.r.delete()
 
             
             
@@ -280,11 +283,11 @@ class MovieMaker():
         output_file = os.path.join(self.save_path, tab + 'z.mp4')
         self.save_video(movie_file, color_list)
         if music_file is not None:
-            subprocess.run(['/home/lrh/Documents/ffmpeg-6.0-amd64-static/ffmpeg','-i',movie_file,'-i',music_file,'-shortest',output_file])
+            subprocess.run(['ffmpeg', '-i', movie_file, '-i', music_file, '-shortest', output_file])
         else:
-
-            subprocess.run(['/home/lrh/Documents/ffmpeg-6.0-amd64-static/ffmpeg','-i',movie_file,output_file])
+            subprocess.run(['ffmpeg', '-i', movie_file, output_file])
         os.remove(movie_file)
+        self.r.delete()
 
 
 def look_at(eye, center, up):
@@ -365,7 +368,8 @@ def motion_data_load_process(motionfile):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("--device", type=str, default="0")
-    parser.add_argument("--modir", type=str, default="")
+    parser.add_argument("--modir", type=str, default="/host_data/van/Dance_v2/LODGE/exp/finedance/Local_Module/FineDance_FineTuneV2_Local/samples_dod_2999_299_inpaint_soft_ddim_notranscontrol_2025-07-30-06-56-05/concat/npy")
+    parser.add_argument("--musicdir", type=str, default="/host_data/van/Dance_v2/LODGE/data/finedance/music_wav")
     parser.add_argument("--mode", type=str, default="smplx", choices=['smpl','smplh','smplx'])
     parser.add_argument("--fps", type=int, default=30)
     parser.add_argument("--save_path", type=str, default=None)
@@ -383,8 +387,6 @@ if __name__ == '__main__':
         save_path = os.path.join(motion_dir, 'video')
         os.makedirs(save_path, exist_ok=True)
 
-
-    music_dir = "experiments/DanceDiffuse_module/debug--0517_Norm_512len_315_transloss/val1640/samples_2023-05-17-20-54-05"
     for file in os.listdir(motion_dir):
         if file[-3:] in ["npy", "pkl"]:
 
@@ -404,5 +406,5 @@ if __name__ == '__main__':
             motion_file = os.path.join(motion_dir, file)
             visualizer = MovieMaker(save_path=save_path)
             modata = motion_data_load_process(motion_file)
-            visualizer.run(modata, tab=os.path.basename(motion_file).split(".")[0], music_file=None)
+            visualizer.run(modata, tab=os.path.basename(motion_file).split(".")[0], music_file=os.path.join(args.musicdir, file[:-3] + 'wav'))
     print('done')

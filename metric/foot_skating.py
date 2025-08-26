@@ -95,10 +95,8 @@ def calc_foot_skating_ratio(data):
     return left_ratio, right_ratio
 
 
-
-
 if __name__ == '__main__':
-    test_dir = '/data2/lrh/project/dance/Lodge/lodge_pub/experiments/Local_Module/FineDance_FineTuneV2_Local/samples_dod_2999_299_inpaint_soft_ddim_notranscontrol_2024-03-16-04-29-01/concat/npy'
+    test_dir = '/host_data/van/Dance_v2/LODGE/exp/finedance/Local_Module/FineDance_FineTuneV2_Local/samples_dod_2999_299_inpaint_soft_ddim_notranscontrol_2025-07-30-06-56-05/concat/npy'
 
     ground_height = 0
     left_ratio_list = []

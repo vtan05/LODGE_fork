@@ -11,8 +11,15 @@ from scipy.signal import argrelextrema
 import matplotlib.pyplot as plt 
 sys.path.append(os.getcwd())
 from dld.data.render_joints.smplfk import SMPLX_Skeleton, do_smplxfk
+from tqdm import tqdm
 
-
+def measure_jitter(joint_pos, fps):
+    # Ensure we have enough frames
+    if joint_pos.shape[0] < 4:
+        return 0.0
+    jitter = (joint_pos[3:] - 3 * joint_pos[2:-1] + 3 * joint_pos[1:-2] - joint_pos[:-3]) * (fps ** 3)
+    jitter = np.linalg.norm(jitter, axis=2)  # shape: [T-3, J]
+    return jitter.mean()
 
 def get_mb(key, length=None):
     path = os.path.join(music_root, key)
@@ -83,6 +90,7 @@ def BA(music_beats, motion_beats):
 def calc_ba_score(motionroot, musicroot):
     # gt_list = []
     ba_scores = []
+    jitter_scores = []
     test_list = ["063", "132", "143", "036", "098", "198", "130", "012", "211",  "179", "065", "137", "161", "092", "120", "037", "109", "204", "144"]
 
     for pkl in os.listdir(motionroot):
@@ -130,15 +138,20 @@ def calc_ba_score(motionroot, musicroot):
         music_beats = get_music_beat_fromwav(os.path.join(musicroot, pkl.split('.')[0] + '.wav'), joint3d.shape[0])
 
         ba_scores.append(BA(music_beats, dance_beats))
-        
-    return np.mean(ba_scores)
+
+        jitter_score = measure_jitter(joint3d, fps=30)
+        jitter_scores.append(jitter_score)
+
+    print(f"[BA Score] Average: {np.mean(ba_scores):.4f}")
+    print(f"[Jitter] Average: {np.mean(jitter_scores):.6f}")
+    return np.mean(ba_scores), np.mean(jitter_scores)
 
 if __name__ == '__main__':
-    music_root = "data/finedance/music_wav"
+    music_root = "/host_data/van/Dance_v2/LODGE/data/finedance/music_wav"
     smplx_model = SMPLX_Skeleton()
-    pred_root = '/data2/lrh/project/dance/Lodge/lodge_pub/experiments/Local_Module/FineDance_FineTuneV2_Local/samples_dod_2999_299_inpaint_soft_ddim_notranscontrol_2024-03-16-04-29-01/concat/npy'
+    pred_root = '/host_data/van/Dance_v2/LODGE/exp/finedance/Local_Module/FineDance_FineTuneV2_Local/samples_dod_2999_299_inpaint_soft_ddim_notranscontrol_2025-07-30-06-56-05/concat/npy'
 
-    print('Calculating pred metrics')
+    print('Calculating pred metrics:')
     print(pred_root)
-    print(calc_ba_score(pred_root, music_root))
+    ba, jitter = calc_ba_score(pred_root, music_root)
   

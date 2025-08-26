@@ -313,11 +313,11 @@ if __name__ == "__main__":
     cfg.Name = "demo--" + cfg.NAME
     cfg.length1 = 1024
     cfg.length2 = 256
-    cfg.checkpoint1 = 'exp/Global_Module/FineDance_Global/checkpoints/epoch=2999.ckpt'
-    cfg.checkpoint2 = 'exp/Local_Module/FineDance_FineTuneV2_Local/checkpoints/epoch=299.ckpt'
-    cfg_coarse =  OmegaConf.load('exp/Global_Module/FineDance_Global/global_train.yaml')
-    music2genre_ = music2genre("data/finedance/label_json")
-    music_dir = "data/finedance/music"  
+    cfg.checkpoint1 = '/host_data/van/Dance_v2/LODGE/exp/Global_Module/FineDance_Global/checkpoints/epoch=2999.ckpt'
+    cfg.checkpoint2 = '/host_data/van/Dance_v2/LODGE/exp/Local_Module/FineDance_FineTuneV2_Local/checkpoints/epoch=299.ckpt'
+    cfg_coarse =  OmegaConf.load('/host_data/van/Dance_v2/LODGE/exp/Global_Module/FineDance_Global/global_train.yaml')
+    music2genre_ = music2genre("/host_data/van/Dance_v2/LODGE/data/finedance/label_json")
+    music_dir = "/host_data/van/Dance_v2/LODGE/data/finedance/music_wav"  
     print("cfg.soft", cfg.soft)
     
 
