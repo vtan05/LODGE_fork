@@ -1,6 +1,6 @@
-NAME: Finedance_10s # Experiment name
+NAME: Motorica # Experiment name
 ACCELERATOR: 'gpu' # Devices optioncal: “cpu”, “gpu”, “tpu”, “ipu”, “hpu”, “mps, “auto”
-DEVICE: [0]   #,  #  # Index of gpus eg. [0] or [0,1,2,3]
+DEVICE: [0,1]   #,  #  # Index of gpus eg. [0] or [0,1,2,3]
 
 # FOLDER: ./experiments
 SEED_VALUE: 1234
@@ -12,9 +12,9 @@ TRAIN:
   STAGE: diffusion    # diffusion
   SPLIT: 'train'
   NUM_WORKERS: 16 # Number of workers
-  BATCH_SIZE: 128 # Size of batches
+  BATCH_SIZE: 64 # Size of batches
   START_EPOCH: 1 # Start epoch
-  END_EPOCH: 3001 # End epoch
+  END_EPOCH: 1001 # 3001 (for Finedance) # End epoch
   RESUME: '' # Experiment path to be resumed training
   # PRETRAINED_VAE: ''
   PRETRAINED: '' # Pretrained model path
@@ -167,4 +167,4 @@ FINEDANCE:
   njoints: 22   
   mode: single  # "single" , "double_react", "double"
   partial: full   # "full" , "morden", "tradition"
-  GENRE_NUM: 16
+  GENRE_NUM: 7 # 16 (for FineDance) 7 (for Motorica)

@@ -1,7 +1,12 @@
-FOLDER: /host_data/van/Dance_v2/LODGE/exp/finedance # Experiment files saving path
+# FOLDER: /host_data/van/Dance_v2/LODGE/exp/finedance # Experiment files saving path
+
+# TEST:
+#   FOLDER: /host_data/van/Dance_v2/LODGE/exp/finedance # Testing files saving path
+
+FOLDER: /host_data/van/Dance_v2/LODGE/exp_motorica # Experiment files saving path
 
 TEST:
-  FOLDER: /host_data/van/Dance_v2/LODGE/exp/finedance # Testing files saving path
+  FOLDER: /host_data/van/Dance_v2/LODGE/exp_motorica # Testing files saving path
 
 DATASET:
   SMPL_PATH: '/data2/lrh/smpl_model/smpl'
@@ -16,11 +21,10 @@ DATASET:
     MOTION: /data2/lrh/dataset/aist/data/origin/30fps/fullset/dances139_60fps
     MUSIC: /data2/lrh/dataset/aist/data/origin/60fps/fullset/musics35_60fps
   FINEDANCE_139CUT:
-    ROOT: /host_data/van/Dance_v2/LODGE/data/finedance
-    MOTION: /host_data/van/Dance_v2/LODGE/data/finedance/mofea319
-    MUSIC: /host_data/van/Dance_v2/LODGE/data/finedance/music_npy_new
-    normalizer: /host_data/van/Dance_v2/LODGE/data/finedance/Normalizer.pth
-    LABEL: /host_data/van/Dance_v2/LODGE/data/finedance/label_json
-    # LABEL: /data2/lrh/dataset/fine_dance/origin/label_json/
+    ROOT: /host_data/van/Dance_v2/LODGE/data/motorica
+    MOTION: /host_data/van/Dance_v2/LODGE/data/motorica/mofea
+    MUSIC: /host_data/van/Dance_v2/LODGE/data/motorica/music_npynew
+    normalizer: /host_data/van/Dance_v2/LODGE/data/motorica/Normalizertest.pth
+    LABEL: /host_data/van/Dance_v2/LODGE/data/motorica/label_json
   
 

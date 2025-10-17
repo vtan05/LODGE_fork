@@ -14,8 +14,8 @@ SR = FPS * HOP_LENGTH
 EPS = 1e-6
 
 
-audio_dir = 'data/finedance/music_wav'
-target_dir_ori = "data/finedance/music_npy_test"
+audio_dir = r'/host_data/van/Dance_v2/LODGE/data/motorica/wav'
+target_dir_ori = r"/host_data/van/Dance_v2/LODGE/data/motorica/music_npynew"
 os.makedirs(target_dir_ori, exist_ok=True)
 
 

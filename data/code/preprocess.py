@@ -163,3 +163,4 @@ if __name__ == "__main__":
                         music_indir="data/finedance/music_npy", 
                         # music_indir="/data2/lrh/dataset/fine_dance/origin/music_feature35_edge",
                         music_outdir="data/finedance/music_npynew/", )
+

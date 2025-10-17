@@ -71,6 +71,16 @@ Genres_fd = {            # Breaking
           'Chinese':15,
 }
 
+Genres_mo = {
+        'gCH':0,
+        'gJZ':1,
+        'gKR':2,
+        'gLH':3,
+        'gLO':4,
+        'gPO':5,
+        'gTP':6,
+}
+
 def music2genre(label_dir):
     music_genre = {}
     for file in os.listdir(label_dir):
@@ -129,6 +139,8 @@ class FineDance_Smpl(data.Dataset):
                 motion = motion[:,:139]
             elif motion.shape[-1] == 139:
                 pass
+            elif motion.shape[-1] == 151:           ##### ?????
+                motion = motion[:,:139]
             else:
                 print("motion.shape", motion.shape)
                 raise("input motion shape error!")
@@ -138,7 +150,8 @@ class FineDance_Smpl(data.Dataset):
             if 'FINEDANCE' in dataname:
                 genre = self.music2genre[name.split(".")[0]]
                 # print("genre1 ", genre)
-                genre = np.array(Genres_fd[genre])
+                # genre = np.array(Genres_fd[genre]) ## for FineDance
+                genre = np.array(Genres_mo[genre]) ## for Motorica
                 genre = torch.from_numpy(genre).unsqueeze(0)
             elif 'AISTPP' in dataname:
                 genre = name.split('_')[0]
@@ -242,43 +255,60 @@ class FineDance_Smpl(data.Dataset):
             return  ignore, train, test
 
 
-        else:
-            all_list = []
-            train_list = []
-            for i in range(1,212):
-                all_list.append(str(i).zfill(3))
+        # else: ### for FineDance
+        #     all_list = []
+        #     train_list = []
+        #     for i in range(1,212):
+        #         all_list.append(str(i).zfill(3))
     
-            test_list = ["063", "132", "143", "036", "098", "198", "130", "012", "211", "193", "179", "065", "137", "161", "092", "120", "037", "109", "204", "144"]
-            ignor_list = ["116", "117", "118", "119", "120", "121", "122", "123", "202"]
-            tradition_list = ['005', '007', '008', '015', '017', '018', '021', '022', '023', '024', '025', '026', '027', '028', '029', '030', '032', '032', '033', '034', '035', '036', '037', '038', '039', '040', '041', '042', '043', '044', '045', '046', '047', '048', '049', '050', '051', '072', '073', '074', '075', '076', '077', '078', '079', '080', '081', '082', '083', '104', '105', '106', '107', '108', '109', '110', '111', '112', '113', '114', '115', '116', '117', '118', '119', '120', '121', '122', '123', '126', '127', '132', '133', '134',  '135', '136', '137', '138', '139', '140', '141', '142', '143', '144', '145', '146', '147', '148', '151', '152', '153', '154', '155', '170']
-            morden_list = []
-            for one in all_list:
-                if one not in tradition_list:
-                    morden_list.append(one)
+        #     test_list = ["063", "132", "143", "036", "098", "198", "130", "012", "211", "193", "179", "065", "137", "161", "092", "120", "037", "109", "204", "144"]
+        #     ignor_list = ["116", "117", "118", "119", "120", "121", "122", "123", "202"]
+        #     tradition_list = ['005', '007', '008', '015', '017', '018', '021', '022', '023', '024', '025', '026', '027', '028', '029', '030', '032', '032', '033', '034', '035', '036', '037', '038', '039', '040', '041', '042', '043', '044', '045', '046', '047', '048', '049', '050', '051', '072', '073', '074', '075', '076', '077', '078', '079', '080', '081', '082', '083', '104', '105', '106', '107', '108', '109', '110', '111', '112', '113', '114', '115', '116', '117', '118', '119', '120', '121', '122', '123', '126', '127', '132', '133', '134',  '135', '136', '137', '138', '139', '140', '141', '142', '143', '144', '145', '146', '147', '148', '151', '152', '153', '154', '155', '170']
+        #     morden_list = []
+        #     for one in all_list:
+        #         if one not in tradition_list:
+        #             morden_list.append(one)
 
-            ignor_list = ignor_list
-            for one in all_list:
-                if one not in test_list:
-                    train_list.append(one)
+        #     ignor_list = ignor_list
+        #     for one in all_list:
+        #         if one not in test_list:
+        #             train_list.append(one)
             
-            if self.args.FINEDANCE.partial == 'full':
-                return ignor_list, train_list, test_list
-            elif self.args.FINEDANCE.partial == 'morden':
-                for one in train_list:
-                    if one in tradition_list:
-                        train_list.remove(one)
-                for one in test_list:
-                    if one in tradition_list:
-                        test_list.remove(one)
-                return ignor_list, train_list, test_list
-            elif self.args.FINEDANCE.partial == 'tradition':
-                for one in train_list:
-                    if one in morden_list:
-                        train_list.remove(one)
-                for one in test_list:
-                    if one in morden_list:
-                        test_list.remove(one)
-                return ignor_list, train_list, test_list
+        #     if self.args.FINEDANCE.partial == 'full':
+        #         return ignor_list, train_list, test_list
+        #     elif self.args.FINEDANCE.partial == 'morden':
+        #         for one in train_list:
+        #             if one in tradition_list:
+        #                 train_list.remove(one)
+        #         for one in test_list:
+        #             if one in tradition_list:
+        #                 test_list.remove(one)
+        #         return ignor_list, train_list, test_list
+        #     elif self.args.FINEDANCE.partial == 'tradition':
+        #         for one in train_list:
+        #             if one in morden_list:
+        #                 train_list.remove(one)
+        #         for one in test_list:
+        #             if one in morden_list:
+        #                 test_list.remove(one)
+        #         return ignor_list, train_list, test_list
+
+        else: # for Motorica
+            train = []
+            test = []
+            ignore = []
+
+            train_file = open('/host_data/van/Dance_v2/LODGE/data/motorica/train_files.txt', 'r')
+            for fname in train_file.readlines():
+                train.append(fname.strip())
+            train_file.close()
+
+            test_file = open('/host_data/van/Dance_v2/LODGE/data/motorica/test_files.txt', 'r')
+            for fname in test_file.readlines():
+                test.append(fname.strip())
+            test_file.close()
+
+            return ignore, train, test
 
 
 
