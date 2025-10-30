@@ -16,6 +16,7 @@ from dld.models.get_model import get_module
 from dld.utils.logger import create_logger
 
 
+torch.set_float32_matmul_precision('medium')
 
 def main():
     # parse options

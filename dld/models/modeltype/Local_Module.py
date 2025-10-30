@@ -5,6 +5,7 @@ import sys
 import numpy as np
 import torch
 from torch import Tensor
+import torch.nn.functional as F
 from torch.optim import AdamW
 from torchmetrics import MetricCollection
 import time
@@ -235,6 +236,7 @@ class Local_Module(BaseModel):
                             mocond_2[:, 4]  = mocond_2[:, 4] - mocond_2[:1, 4]  
                             mocond_2[:, 6]  = mocond_2[:, 6] - mocond_2[:1, 6]   
                             mid = torch.from_numpy(orikey[i][4:-4]).to(cond)
+                            # mid = F.interpolate(mid.T.unsqueeze(0), size=16, mode='linear', align_corners=False).squeeze(0).T
                             # Mmid_pose = swap_left_right(mid[:, 7:])
                             # print("Mmid_pose.shape", Mmid_pose.shape)
                             # Mmid_pose = ax_to_6v(Mmid_pose).view(-1, 132)

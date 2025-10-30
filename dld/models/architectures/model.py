@@ -925,6 +925,9 @@ class Refine_DanceDecoder(nn.Module):
         cond_tokens = self.cond_encoder(cond_tokens)
 
         null_cond_embed = self.null_cond_embed.to(cond_tokens.dtype)
+        # print("cond_tokens.shape", cond_tokens.shape)
+        # print("null_cond_embed.shape", null_cond_embed.shape)
+        # print("keep_mask_embed.shape", keep_mask_embed.shape)
         cond_tokens = torch.where(keep_mask_embed, cond_tokens, null_cond_embed)
 
         mean_pooled_cond_tokens = cond_tokens.mean(dim=-2)

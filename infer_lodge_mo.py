@@ -16,6 +16,7 @@ import torch, glob, random
 import torch.backends.cudnn as cudnn
 from torch.utils.data import ConcatDataset, DataLoader
 from tqdm import tqdm
+import re
        
 from dld.config import parse_args
 from dld.models.get_model import get_module
@@ -25,7 +26,7 @@ from dld.data.utils.audio import slice_audio
 from dld.data.utils.audio import extract as extract_music35
 from concat_res import concat_res
 from dld.data.render_joints.smplfk import ax_from_6v, ax_to_6v
-from dld.data.FineDance_dataset import music2genre, Genres_fd
+from dld.data.FineDance_dataset import music2genre, Genres_mo
 
 
 def swap_left_right(data):   
@@ -197,7 +198,8 @@ def test(cfg):
     # elif opt.wavdir != 'None':
     for file in os.listdir(music_dir):
         flag = 0
-        if not file[:3] in test_list:
+        # print("file", file[:-3])
+        if not file[:-4] in test_list:
             continue
 
         file_name = file[:-4]
@@ -283,14 +285,14 @@ def test(cfg):
                 molist.append(modata[item*scale : (item+1)*scale])
                 all_localfilename_cat = all_localfilename_cat + [file_name + 'g' + str(rgi).zfill(3) + 'g_' + 'l' + str(item).zfill(3)]
             print("len(molist)", len(molist))
-            print("molist[i].shape", molist[0].shape)
+            # print("molist[i].shape", molist[0].shape)
             modata13_cat.append(modata_13)
             molist_cat += molist
 
 
         print("file ", file)
-        genre = music2genre_[file[:3]]
-        genre = np.array(Genres_fd[genre])
+        genre = re.search(r'_(g[A-Z]{2})_', file_name).group(1)
+        genre = np.array(Genres_mo[genre])
         genre = torch.from_numpy(genre).unsqueeze(0)
 
         data_tuple = None, music_fea_cat, all_localfilename_cat, molist_cat
@@ -313,11 +315,12 @@ if __name__ == "__main__":
     cfg.Name = "demo--" + cfg.NAME
     cfg.length1 = 1024
     cfg.length2 = 256
-    cfg.checkpoint1 = '/host_data/van/Dance_v2/LODGE/exp/Global_Module/FineDance_Global/checkpoints/epoch=2999.ckpt'
-    cfg.checkpoint2 = '/host_data/van/Dance_v2/LODGE/exp/Local_Module/FineDance_FineTuneV2_Local/checkpoints/epoch=299.ckpt'
-    cfg_coarse =  OmegaConf.load('/host_data/van/Dance_v2/LODGE/exp/Global_Module/FineDance_Global/global_train.yaml')
-    music2genre_ = music2genre("/host_data/van/Dance_v2/LODGE/data/finedance/label_json")
-    music_dir = "/host_data/van/Dance_v2/LODGE/data/finedance/music_wav"  
+    cfg.checkpoint1 = '/host_data/van/Dance_v2/LODGE/exp_motorica/Global_Module/debug--Motorica_Coarse/checkpoints/epoch=1.ckpt'
+    cfg.checkpoint2 = '/host_data/van/Dance_v2/LODGE/exp_motorica/Local_Module/debug--Motorica_FineTuneV2_Local/checkpoints/epoch=1.ckpt'
+    cfg_coarse =  OmegaConf.load('/host_data/van/Dance_v2/LODGE/exp_motorica/Global_Module/debug--Motorica_Coarse/config_2025-10-29-04-41-54_train.yaml')
+    music2genre_ = music2genre("/host_data/van/Dance_v2/LODGE/data/motorica/label_json")
+    music_dir = "/host_data/van/Dance_v2/LODGE/data/motorica/wav"  
+    txt_path = "/host_data/van/Dance_v2/LODGE/data/motorica/test_files.txt"
     print("cfg.soft", cfg.soft)
     
 
@@ -336,6 +339,7 @@ if __name__ == "__main__":
     with open(os.path.join(output_dir, 'command.txt'), 'a') as f:
         f.write(command)
 
-    test_list = ["063", "193", "132", "143", "036", "098", "198", "130", "012", "120",  "179", "065", "137", "161", "092",  "037", "109", "204", "144", "211"]  
+    with open(txt_path, 'r') as f:
+        test_list = [line.strip() for line in f if line.strip()]
     test(cfg)
     concat_res(output_dir)
